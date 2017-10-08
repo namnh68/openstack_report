@@ -1,1 +1,2 @@
 reportlab==3.4.0
+keystoneauth1==2.20.0
