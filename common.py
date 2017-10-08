@@ -1,4 +1,6 @@
 # _*_ coding:utf-8 _*_
+# Reference: https://github.com/daikk115/openstack_upgrade_test
+
 from requests_futures.sessions import FuturesSession
 
 future_session = FuturesSession()

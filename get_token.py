@@ -1,4 +1,6 @@
 # _*_ coding:utf-8 _*_
+# Reference: https://github.com/daikk115/openstack_upgrade_test
+
 from keystoneauth1.identity import v3
 from keystoneauth1 import session
 
