@@ -3,7 +3,7 @@
 
 import optparse
 
-import config
+from opt_report import config
 
 
 def main():

@@ -1,0 +1,5 @@
+ip_keystone = '192.168.10.130'
+username = 'admin'
+password = 'abc123'
+project_name = 'admin'
+nova_url = '192.168.10.130'
