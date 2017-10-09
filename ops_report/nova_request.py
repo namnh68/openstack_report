@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 
-from opt_report import common, config
+import config
+from ops_report import common
 
 
 def hyper_list(url=None, token=None):

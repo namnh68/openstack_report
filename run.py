@@ -3,7 +3,7 @@
 
 import optparse
 
-from opt_report import config
+from ops_report import config
 
 
 def main():
@@ -21,7 +21,7 @@ def main():
                       metavar='PROJECT_NAME',
                       help='The project name of users')
     parser.add_option('-i', '--keystone', action='store', type='string',
-                      dest='keystone_ip', default=config.IP_Keystone,
+                      dest='keystone_ip', default=config.ip_keystone,
                       metavar='KEYSTONE IP',
                       help='The IP of keystone')
     (options, args) = parser.parse_args()
