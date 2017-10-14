@@ -1,6 +1,9 @@
 # _*_ coding:utf-8 _*_
 # Reference: https://github.com/daikk115/openstack_upgrade_test
+from __future__ import division
+import math
 
+from keystoneauth1.identity import v2
 from keystoneauth1.identity import v3
 from keystoneauth1 import session
 from requests_futures.sessions import FuturesSession
@@ -30,7 +33,7 @@ def send_get_request(url, headers=None, **kwargs):
     return future_session.get(url, headers=headers, **kwargs)
 
 
-def get_token(ip_keystone, username, password, project_name):
+def get_token_v3(ip_keystone, username, password, project_name):
     """
     :param ip_keystone: a IP of keystone to get token
     :param username: username
@@ -45,7 +48,33 @@ def get_token(ip_keystone, username, password, project_name):
                        project_domain_name='default',
                        project_name=project_name)
 
-    session_ = session.Session(auth=auth)
-    token = session_.get_token()
-    project_id = session_.get_project_id()
-    return token, project_id
+    sess = session.Session(auth=auth)
+    token = sess.get_token()
+    return token
+
+
+def get_token_v2(ip_keystone, username, password, tenant_name):
+    auth_url = 'http://{}:5000/v2.0'.format(ip_keystone)
+    auth = v2.Password(auth_url=auth_url, username=username,
+                       password=password, tenant_name=tenant_name)
+    sess = session.Session(auth=auth)
+    token = sess.get_token()
+    return token
+
+
+def convert_size(size_bytes):
+    if size_bytes == 0:
+        return "0 B"
+    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    i = int(math.floor(math.log(size_bytes, 1024)))
+    p = math.pow(1024, i)
+    s = round(size_bytes / p, 2)
+    return "{0} {1}".format(s, size_name[i])
+
+
+def byte_to_mb(size_byte):
+    if size_byte <= 0:
+        return 0
+    else:
+        mb = size_byte/1048576
+        return mb

@@ -2,22 +2,36 @@
 from zabbix.api import ZabbixAPI
 
 
-zabi = None
+def get_zabbix(username, password, ip_zabbix, port=None):
+    port = '81' if port is None else port
+    url = 'http://{0}:{1}'.format(ip_zabbix, port)
+    return ZabbixAPI(url=url, user=username, password=password)
 
 
-def _get(global_za, za):
-    if not global_za:
-        global_za = za
-    return global_za
+class ZabbixClient(object):
 
+    def __init__(self, username, password, ip_zabbix):
+        self.username = username
+        self.password = password
+        self.ip_zabbix = ip_zabbix
+        self.session = get_zabbix(self.username, self.password, self.ip_zabbix)
 
-def set_zabbix(url, username, password):
-    zabi = ZabbixAPI(url=url, user=username, password=password)
-    return zabi
+    def get_param_host(self, hostname):
 
+        data = {
+            "output": "extend",
+            "host": hostname,
+            "filter": {
+                'key_': ["vm.memory.size[available]",
+                         "vm.memory.size[total]"]
+            },
+            "sortfield": "name"
+        }
 
-def get_zabbix(url, username, password):
-    global zabi
-    return _get(zabi, set_zabbix(url, username, password))
+        hosts = self.session.do_request(method='item.get', params=data)
+        return hosts.get('result')
 
-
+# b = ZabbixClient(username='Admin', password='zabbix',
+#                  ip_zabbix='192.168.100.8')
+# c = b.get_param_host(hostname='controller')
+# a = 1
