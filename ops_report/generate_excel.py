@@ -29,11 +29,45 @@ def prepare_header(sheet, workbook):
     return sheet
 
 
-def write_xls(file_name, sheet_name, data, data_xfs):
+def write_xls(file_name, data, data_xfs):
     book = xlsxwriter.Workbook(file_name)
-    sheet = book.add_worksheet(sheet_name)
+    format_col = book.add_format({'align': 'center'})
+    sheet = book.add_worksheet('OpenStack_hypervisor')
+    sheet.set_column('A:A', 20, cell_format=format_col)
+    sheet.set_column('B:M', 15, cell_format=format_col)
+    sheet.set_default_row(20, format_col)
     sheet = prepare_header(sheet, book)
+    row = 6
+    for name_com, params in data.items():
+        sheet.write(row, 0, name_com)
+        sheet.write(row, 1, params.get('memory_mb_used'))
+        sheet.write(row, 2, params.get('memory_mb'))
+        sheet.write_formula(row, 3, '=B{0}/C{0}'.format(row+1))
+        sheet.write(row, 4, params.get('read_memory_used'))
+        sheet.write(row, 5, params.get('read_memory_mb'))
+        sheet.write_formula(row, 6, '=E{0}/F{0}'.format(row+1))
+        sheet.write(row, 7, params.get('vcpus_used'))
+        sheet.write(row, 8, params.get('vcpus'))
+        sheet.write_formula(row, 9, '=H{0}/I{0}'.format(row+1))
+        sheet.write(row, 10, params.get('read_cpu_used'))
+        sheet.write(row, 11, params.get('read_cpu'))
+        sheet.write_formula(row, 12, '=K{0}/L{0}'.format(row+1))
+        row += 1
     book.close()
 
-# filename = '/Users/NamHoai/MyGit/openstack_report/test.xlsx'
-# write_xls(filename, sheet_name='Test', data='a', data_xfs='b')
+
+data = {
+    'compute3': {'memory_mb_used': '10', 'memory_mb': '20', 'vcpus_used': '50',
+                 'vcpus': '100', 'read_memory_used': '5', 'read_memory_mb':
+                     '7', 'read_cpu_used': '30', 'read_cpu': '60'},
+    'compute1': {'memory_mb_used': '1', 'memory_mb': '2', 'vcpus_used': '5',
+                 'vcpus': '10', 'read_memory_used': '0.5', 'read_memory_mb':
+                     '0.75', 'read_cpu_used': '3', 'read_cpu': '6'},
+    'compute2': {'memory_mb_used': '10', 'memory_mb': '20', 'vcpus_used': '50',
+                 'vcpus': '100', 'read_memory_used': '5', 'read_memory_mb':
+                     '7', 'read_cpu_used': '30', 'read_cpu': '60'},
+
+}
+
+filename = '/Users/NamHoai/MyGit/openstack_report/test.xlsx'
+write_xls(filename, data=data, data_xfs='b')
