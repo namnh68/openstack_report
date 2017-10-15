@@ -9,7 +9,8 @@ project_name = 'admin'
 # For Zabbix
 user_zabbix = 'Admin'
 pass_zabbix = 'zabbix'
-ip_zabbix = '192.168.100.105'
+zabbix_ip = '192.168.100.105'
+zabbix_port = '80'
 
 # For sending emails
 email_from = 'test@gmail.com'

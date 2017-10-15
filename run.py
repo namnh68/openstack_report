@@ -29,7 +29,8 @@ def main():
     # For Zabbix
     user_zabbix = config.user_zabbix
     pass_zabbix = config.pass_admin
-    zabbix_ip = config.ip_zabbix
+    zabbix_ip = config.zabbix_ip
+    zabbix_port = config.zabbix_port
 
     # For sending emails
     email_from = config.email_from

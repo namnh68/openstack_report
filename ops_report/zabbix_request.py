@@ -2,8 +2,7 @@
 from zabbix.api import ZabbixAPI
 
 
-def get_zabbix(username, password, ip_zabbix, port=None):
-    port = '81' if port is None else port
+def get_zabbix(username, password, ip_zabbix, port):
     url = 'http://{0}:{1}'.format(ip_zabbix, port)
     return ZabbixAPI(url=url, user=username, password=password)
 
