@@ -1,25 +1,24 @@
 # -*- coding: utf-8 -*-
 import json
 
-import config
 from ops_report import common
 
 
 class NovaClient(object):
 
-    def __init__(self, token, ip_nova=None, port=None):
-        self.ip_nova = ip_nova
+    def __init__(self, token, nova_ip=None, port=None):
+        self.nova_ip = nova_ip
         self.port = str(port)
         self.token = token
 
     def hyper_list(self):
-        ip_nova = config.ip_keystone if self.ip_nova is None else self.ip_nova
         if self.port is None:
             full_url_nova = 'http://{0}/compute/v2.1/' \
-                            'os-hypervisors/detail'.format(ip_nova)
+                            'os-hypervisors/detail'.format(self.nova_ip)
         else:
             full_url_nova = 'http://{0}:{1}/v2/' \
-                            'os-hypervisors/detail'.format(ip_nova, self.port)
+                            'os-hypervisors/detail'.format(self.nova_ip,
+                                                           self.port)
         headers = {
             'X-Auth-Token': self.token,
             'Content-Type': 'application/json'
@@ -34,14 +33,12 @@ class NovaClient(object):
         :return: Detail of a compute
         :type: dictionary
         """
-        ip_nova = config.ip_keystone if self.ip_nova is None else self.ip_nova
         if self.port is None:
             url_nova = 'http://{0}/compute/v2.1/os-hypervisors/{1}'. \
-                format(ip_nova, id_compute)
+                format(self.nova_ip, id_compute)
         else:
-            url_nova = 'http://{0}:{1}/v2/os-hypervisors/{2}'.format(ip_nova,
-                                                                     self.port,
-                                                                     id_compute)
+            url_nova = 'http://{0}:{1}/v2/os-hypervisors/{2}'.\
+                format(self.nova_ip, self.port, id_compute)
         headers = {
             'X-Auth-Token': self.token,
             'Content-Type': 'application/json'
@@ -69,11 +66,11 @@ class NovaClient(object):
                 'vcpus')})
         return output
 
-token = common.get_token_v2(ip_keystone=config.ip_keystone,
-                            username=config.username,
-                            password=config.password,
-                            tenant_name=config.project_name)
-
-a = NovaClient(token=token, port=8774)
-b = a.hyper_list_customize()
-c = 1
+# token = common.get_token_v2(keystone_ip=config.ip_keystone,
+#                             username=config.username,
+#                             password=config.password,
+#                             tenant_name=config.project_name)
+#
+# a = NovaClient(token=token, port=8774)
+# b = a.hyper_list_customize()
+# c = 1

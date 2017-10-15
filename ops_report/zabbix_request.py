@@ -10,10 +10,10 @@ def get_zabbix(username, password, ip_zabbix, port=None):
 
 class ZabbixClient(object):
 
-    def __init__(self, username, password, ip_zabbix):
-        self.username = username
-        self.password = password
-        self.ip_zabbix = ip_zabbix
+    def __init__(self, user_zabbix, pass_zabbix, zabbix_ip):
+        self.username = user_zabbix
+        self.password = pass_zabbix
+        self.ip_zabbix = zabbix_ip
         self.session = get_zabbix(self.username, self.password, self.ip_zabbix)
 
     def get_param_host(self, hostname):

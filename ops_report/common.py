@@ -33,16 +33,16 @@ def send_get_request(url, headers=None, **kwargs):
     return future_session.get(url, headers=headers, **kwargs)
 
 
-def get_token_v3(ip_keystone, username, password, project_name):
+def get_token_v3(keystone_ip, username, password, project_name):
     """
-    :param ip_keystone: a IP of keystone to get token
+    :param keystone_ip: a IP of keystone to get token
     :param username: username
     :param password: password
     :param project_name: project_name
     :return: token and project_id
     """
 
-    auth_url = 'http://{}/identity/v3'.format(ip_keystone)
+    auth_url = 'http://{}/identity/v3'.format(keystone_ip)
     auth = v3.Password(auth_url=auth_url, user_domain_name='default',
                        username=username, password=password,
                        project_domain_name='default',
@@ -53,8 +53,8 @@ def get_token_v3(ip_keystone, username, password, project_name):
     return token
 
 
-def get_token_v2(ip_keystone, username, password, tenant_name):
-    auth_url = 'http://{}:5000/v2.0'.format(ip_keystone)
+def get_token_v2(keystone_ip, username, password, tenant_name):
+    auth_url = 'http://{}:5000/v2.0'.format(keystone_ip)
     auth = v2.Password(auth_url=auth_url, username=username,
                        password=password, tenant_name=tenant_name)
     sess = session.Session(auth=auth)

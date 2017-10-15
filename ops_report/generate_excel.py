@@ -35,5 +35,5 @@ def write_xls(file_name, sheet_name, data, data_xfs):
     sheet = prepare_header(sheet, book)
     book.close()
 
-filename = '/Users/NamHoai/MyGit/openstack_report/test.xlsx'
-write_xls(filename, sheet_name='Test', data='a', data_xfs='b')
+# filename = '/Users/NamHoai/MyGit/openstack_report/test.xlsx'
+# write_xls(filename, sheet_name='Test', data='a', data_xfs='b')
