@@ -43,14 +43,14 @@ def write_xls(file_name, data, data_xfs):
         sheet.write(row, 1, params.get('memory_mb_used'))
         sheet.write(row, 2, params.get('memory_mb'))
         sheet.write_formula(row, 3, '=B{0}/C{0}'.format(row+1))
-        sheet.write(row, 4, params.get('read_memory_used'))
-        sheet.write(row, 5, params.get('read_memory_mb'))
+        sheet.write(row, 4, params.get('real_memory_used'))
+        sheet.write(row, 5, params.get('real_memory_mb'))
         sheet.write_formula(row, 6, '=E{0}/F{0}'.format(row+1))
         sheet.write(row, 7, params.get('vcpus_used'))
         sheet.write(row, 8, params.get('vcpus'))
         sheet.write_formula(row, 9, '=H{0}/I{0}'.format(row+1))
-        sheet.write(row, 10, params.get('read_cpu_used'))
-        sheet.write(row, 11, params.get('read_cpu'))
+        sheet.write(row, 10, params.get('real_cpu_used'))
+        sheet.write(row, 11, params.get('real_cpu'))
         sheet.write_formula(row, 12, '=K{0}/L{0}'.format(row+1))
         row += 1
     book.close()
@@ -58,14 +58,14 @@ def write_xls(file_name, data, data_xfs):
 
 data = {
     'compute3': {'memory_mb_used': '10', 'memory_mb': '20', 'vcpus_used': '50',
-                 'vcpus': '100', 'read_memory_used': '5', 'read_memory_mb':
-                     '7', 'read_cpu_used': '30', 'read_cpu': '60'},
+                 'vcpus': '100', 'real_memory_used': '5', 'real_memory_mb':
+                     '7', 'real_cpu_used': '30', 'real_cpu': '60'},
     'compute1': {'memory_mb_used': '1', 'memory_mb': '2', 'vcpus_used': '5',
-                 'vcpus': '10', 'read_memory_used': '0.5', 'read_memory_mb':
-                     '0.75', 'read_cpu_used': '3', 'read_cpu': '6'},
+                 'vcpus': '10', 'real_memory_used': '0.5', 'real_memory_mb':
+                     '0.75', 'real_cpu_used': '3', 'real_cpu': '6'},
     'compute2': {'memory_mb_used': '10', 'memory_mb': '20', 'vcpus_used': '50',
-                 'vcpus': '100', 'read_memory_used': '5', 'read_memory_mb':
-                     '7', 'read_cpu_used': '30', 'read_cpu': '60'},
+                 'vcpus': '100', 'real_memory_used': '5', 'real_memory_mb':
+                     '7', 'real_cpu_used': '30', 'real_cpu': '60'},
 
 }
 

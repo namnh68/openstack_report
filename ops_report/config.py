@@ -16,6 +16,7 @@ zabbix_port = '80'
 email_from = 'test@gmail.com'
 pass_email_from = '123456'
 email_to = 'test_to@gmail.com'
+email_server = 'smtp.gmail.com:587'
 
 # Mapping Nova with Zabbix
 
