@@ -73,8 +73,9 @@ def convert_size(size_bytes):
 
 
 def byte_to_mb(size_byte):
-    if size_byte <= 0:
-        return 0
+    if type(size_byte) is not float:
+        size_float = float(size_byte)
     else:
-        mb = size_byte/1048576
-        return mb
+        size_float = size_byte
+    mb = size_float/1048576
+    return mb

@@ -9,28 +9,42 @@ def get_zabbix(username, password, ip_zabbix, port):
 
 class ZabbixClient(object):
 
-    def __init__(self, user_zabbix, pass_zabbix, zabbix_ip):
+    def __init__(self, user_zabbix, pass_zabbix, zabbix_ip, zabbix_port):
         self.username = user_zabbix
         self.password = pass_zabbix
         self.ip_zabbix = zabbix_ip
-        self.session = get_zabbix(self.username, self.password, self.ip_zabbix)
+        self.zabbix_port = zabbix_port
+        self.session = get_zabbix(self.username, self.password,
+                                  self.ip_zabbix, self.zabbix_port)
 
     def get_param_host(self, hostname):
 
+        output = {}
         data = {
             "output": "extend",
             "host": hostname,
             "filter": {
                 'key_': ["vm.memory.size[available]",
-                         "vm.memory.size[total]"]
+                         "vm.memory.size[total]",
+                         "system.cpu.util[,system]"]
             },
             "sortfield": "name"
         }
 
         hosts = self.session.do_request(method='item.get', params=data)
-        return hosts.get('result')
+        results = hosts.get('result')
+        for result in results:
+            if result.get('key_') == "vm.memory.size[available]":
+                output['real_memory_used'] = result.get('lastvalue')
+            elif result.get('key_') == "vm.memory.size[total]":
+                output['real_memory'] = result.get('lastvalue')
+            elif result.get('key_') == "system.cpu.util[,system]":
+                output['percent_CPU'] = result.get('lastvalue')
+            else:
+                pass
+        return output
 
-# b = ZabbixClient(username='Admin', password='zabbix',
-#                  ip_zabbix='192.168.100.8')
-# c = b.get_param_host(hostname='controller')
-# a = 1
+b = ZabbixClient(user_zabbix='Admin', pass_zabbix='zabbix',
+                 zabbix_ip='192.168.100.8', zabbix_port='81')
+c = b.get_param_host(hostname='controller')
+a = 1

@@ -4,6 +4,8 @@ pass_admin = 'password'
 keystone_ip = '192.168.100.103'
 nova_ip = '192.168.100.103'
 nova_port = '8776'
+ratio_ram = '1.5'
+ratio_cpu = '1.5'
 project_name = 'admin'
 
 # For Zabbix

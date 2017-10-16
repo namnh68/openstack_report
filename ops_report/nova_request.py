@@ -8,7 +8,7 @@ class NovaClient(object):
 
     def __init__(self, token, nova_ip=None, port=None):
         self.nova_ip = nova_ip
-        self.port = str(port)
+        self.port = port if port.upper() != 'NONE' else None
         self.token = token
 
     def hyper_list(self):
@@ -47,7 +47,7 @@ class NovaClient(object):
         result = show_hyper.result().content
         return json.loads(result)
 
-    def hyper_list_customize(self):
+    def hyper_list_customize(self, ratio_ram, ratio_cpu):
         """Get a list of hypervisor.
         :return: Output will be customized with Ram, CPU
         """
@@ -58,19 +58,10 @@ class NovaClient(object):
             output[key_name_compute] = {}
             output[key_name_compute].update({'memory_mb_used': hypervisor.get(
                 'memory_mb_used')})
-            output[key_name_compute].update({'memory_db': hypervisor.get(
-                'memory_mb')})
+            output[key_name_compute].update({'memory_db': (hypervisor.get(
+                'memory_mb'))*float(ratio_ram)})
             output[key_name_compute].update({'vcpu_used': hypervisor.get(
                 'vcpus_used')})
-            output[key_name_compute].update({'vcpus': hypervisor.get(
-                'vcpus')})
+            output[key_name_compute].update({'vcpus': (hypervisor.get(
+                'vcpus'))*float(ratio_cpu)})
         return output
-
-# token = common.get_token_v2(keystone_ip=config.ip_keystone,
-#                             username=config.username,
-#                             password=config.password,
-#                             tenant_name=config.project_name)
-#
-# a = NovaClient(token=token, port=8774)
-# b = a.hyper_list_customize()
-# c = 1
