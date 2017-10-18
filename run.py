@@ -73,3 +73,6 @@ def main():
     email.send_mail(send_from=email_from, password=pass_email_from,
                     send_to=email_to, path_file=path_name_file,
                     server=email_server)
+
+if __name__ == '__main__':
+    main()
