@@ -1,50 +1,56 @@
-#!/usr/bin/python
-from oslo_log import log as logging
-try:
-    import rados
-    import rbd
-except ImportError:
-    rados = None
-    rbd = None
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import json
+import requests
+#import generate_excel_ceph
+#import os
+#from datetime import datetime
+from ops_report import common
 
-LOG = logging.getLogger(__name__)
-cluster = rados.Rados(conffile='/etc/ceph/my_ceph.conf')
-cluster.connect()
-ioctx = cluster.open_ioctx('mypool')
 
-rbd_inst = rbd.RBD()
+from requests_futures.sessions import FuturesSession
+future_session = FuturesSession()
 
-extents = []
-extents_snap = []
-snapshot = 
+class CephClient(object):
 
-rbd_img = rbd.Image(ioctx, name, snapshot=None, read_only=False)
-def iterate_cb(offset, length, exists):
-    if exists:
-        extents.append(length)
+# def gen_name_report():
+#     path_dir = os.path.dirname(os.path.abspath(__file__))
+#     name_file = 'ceph_report_' + datetime.now().strftime(
+#         '%Y_%m_%d_%Hh_%M_%Ss') + '.xlsx'
+#     full_name_path = os.path.join(path_dir, name_file)
+#     return full_name_path
+    def __init__(self, ceph_ip, ceph_port):
 
-rbd_img.diff_iterate(0, rbd_img.size(), None, iterate_cb, include_parent=True, whole_object=False)
+        self.ceph_ip = ceph_ip
+        self.ceph_port = ceph_port
 
-def iterate_cb_snap(offset, length, exists):
-    if exists:
-        extents_snap.append(length)
 
-rbd_img.diff_iterate(0, rbd_img.size(), snapshot, iterate_cb, include_parent=True, whole_object=False)
+    def get_param_pool(self):
+        full_url = 'http://{0}:{1}/api/v0.1/df?detail'.format(self.ceph_ip, self.ceph_port)
+        headers = {'Accept': 'application/json'}
+        status = common.send_get_request(full_url, headers=headers)
+        #response = requests.get(full_url,headers=headers )
+        result = status.result().json()
+        pools = result.get('output').get('pools')
+       # for i in pools:
+       #     print i.get('stats').get('bytes_used')
+       #     print i.get('stats').get('max_avail')
 
-if extents:
-    extents_from_0 = int(sum(extents))
-    LOG.debug("RBD has %s extents", extents_from_0)
-    return True
+        output = {}
+        for pool in pools:
+            keyname_pool = pool.get('name')
+            output[keyname_pool] = {}
+            # output[keyname_pool].update({'used_mb':0})
+            # output[keyname_pool].update({'total_mb':0})
+            output[keyname_pool].update({'real_used_mb': pool.get('stats').get('bytes_used')})
+            output[keyname_pool].update({'real_total_mb': pool.get('stats').get('max_avail')})
+        return output
 
-if extents_snap:
-    extents_from_snap = int(sum(extents_snap))
-    LOG.debug("RBD has %s extents from snapshot", extents_from_snap)
-    return True
-
-snap_size = extents_from_0 - extents_from_snap
-
-print "Size of RBD image: %d" % extents_from_0
-print "Size of snapshot: %d" % snap_size
-
-ioctx.close()
-cluster.shutdown()
+# def main():
+#     path_name_file = gen_name_report()
+#     print(path_name_file)
+#     print(connect_ceph())
+#     generate_excel_ceph.write_xls(file_name=path_name_file, data=connect_ceph())
+#
+# if __name__ == '__main__':
+#     main()

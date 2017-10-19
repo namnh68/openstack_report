@@ -19,29 +19,30 @@ class ZabbixClient(object):
 
     def get_param_host(self, hostname):
 
-        output = {}
-        data = {
-            "output": "extend",
-            "host": hostname,
-            "filter": {
-                'key_': ["vm.memory.size[available]",
-                         "vm.memory.size[total]",
-                         "system.cpu.util[,system]"]
-            },
-            "sortfield": "name"
-        }
-
-        hosts = self.session.do_request(method='item.get', params=data)
-        results = hosts.get('result')
-        for result in results:
-            if result.get('key_') == "vm.memory.size[available]":
-                output['real_memory_used'] = result.get('lastvalue')
-            elif result.get('key_') == "vm.memory.size[total]":
-                output['real_memory'] = result.get('lastvalue')
-            elif result.get('key_') == "system.cpu.util[,system]":
-                output['percent_CPU'] = result.get('lastvalue')
-            else:
-                pass
+        output = {real_memory_used: 0, real_memory: 0, percent_CPU: 0}
+        # output = {}
+        # data = {
+        #     "output": "extend",
+        #     "host": hostname,
+        #     "filter": {
+        #         'key_': ["vm.memory.size[available]",
+        #                  "vm.memory.size[total]",
+        #                  "system.cpu.util[,system]"]
+        #     },
+        #     "sortfield": "name"
+        # }
+        #
+        # hosts = self.session.do_request(method='item.get', params=data)
+        # results = hosts.get('result')
+        # for result in results:
+        #     if result.get('key_') == "vm.memory.size[available]":
+        #         output['real_memory_used'] = result.get('lastvalue')
+        #     elif result.get('key_') == "vm.memory.size[total]":
+        #         output['real_memory_mb'] = result.get('lastvalue')
+        #     elif result.get('key_') == "system.cpu.util[,system]":
+        #         output['percent_cpu'] = result.get('lastvalue')
+        #     else:
+        #         pass
         return output
 
 b = ZabbixClient(user_zabbix='Admin', pass_zabbix='zabbix',

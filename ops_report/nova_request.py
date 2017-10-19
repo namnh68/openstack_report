@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import json
 
 from ops_report import common
@@ -6,19 +6,20 @@ from ops_report import common
 
 class NovaClient(object):
 
-    def __init__(self, token, nova_ip=None, port=None):
+    def __init__(self, token, nova_ip=None, port=None, project_id=None):
         self.nova_ip = nova_ip
         self.port = port if port.upper() != 'NONE' else None
         self.token = token
+        self.project_id = project_id
 
     def hyper_list(self):
         if self.port is None:
-            full_url_nova = 'http://{0}/compute/v2.1/' \
-                            'os-hypervisors/detail'.format(self.nova_ip)
+            full_url_nova = '{0}://{1}/compute/v2.1/' \
+                            '{2}/os-hypervisors/detail'.format(common.ssl,self.nova_ip,self.project_id)
         else:
-            full_url_nova = 'http://{0}:{1}/v2/' \
-                            'os-hypervisors/detail'.format(self.nova_ip,
-                                                           self.port)
+            full_url_nova = '{0}://{1}:{2}/v2.1/' \
+                            '{3}/os-hypervisors/detail'.format(common.ssl,self.nova_ip,
+                                                           self.port,self.project_id)
         headers = {
             'X-Auth-Token': self.token,
             'Content-Type': 'application/json'
@@ -34,11 +35,11 @@ class NovaClient(object):
         :type: dictionary
         """
         if self.port is None:
-            url_nova = 'http://{0}/compute/v2.1/os-hypervisors/{1}'. \
-                format(self.nova_ip, id_compute)
+            url_nova = '{0}://{1}/compute/v2.1/{2}/os-hypervisors/{2}'. \
+                format(common.ssl, self.nova_ip, id_compute,self.project_id)
         else:
-            url_nova = 'http://{0}:{1}/v2/os-hypervisors/{2}'.\
-                format(self.nova_ip, self.port, id_compute)
+            url_nova = '{0}://{1}:{2}/v2.1/{3}/os-hypervisors/{4}'.\
+                format(common.ssl, self.nova_ip, self.port, self.project_id, id_compute)
         headers = {
             'X-Auth-Token': self.token,
             'Content-Type': 'application/json'
@@ -58,9 +59,9 @@ class NovaClient(object):
             output[key_name_compute] = {}
             output[key_name_compute].update({'memory_mb_used': hypervisor.get(
                 'memory_mb_used')})
-            output[key_name_compute].update({'memory_db': (hypervisor.get(
+            output[key_name_compute].update({'memory_mb': (hypervisor.get(
                 'memory_mb'))*float(ratio_ram)})
-            output[key_name_compute].update({'vcpu_used': hypervisor.get(
+            output[key_name_compute].update({'vcpus_used': hypervisor.get(
                 'vcpus_used')})
             output[key_name_compute].update({'vcpus': (hypervisor.get(
                 'vcpus'))*float(ratio_cpu)})

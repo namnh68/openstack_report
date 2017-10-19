@@ -10,7 +10,7 @@ from requests_futures.sessions import FuturesSession
 
 future_session = FuturesSession()
 
-
+ssl = 'https'
 def send_request(url, method, headers=None, data=None, **kwargs):
     """
     This method for the near future
@@ -30,7 +30,7 @@ def send_request(url, method, headers=None, data=None, **kwargs):
 
 
 def send_get_request(url, headers=None, **kwargs):
-    return future_session.get(url, headers=headers, **kwargs)
+    return future_session.get(url, headers=headers, verify=False, **kwargs)
 
 
 def get_token_v3(keystone_ip, username, password, project_name):
@@ -42,22 +42,23 @@ def get_token_v3(keystone_ip, username, password, project_name):
     :return: token and project_id
     """
 
-    auth_url = 'http://{}/identity/v3'.format(keystone_ip)
+#    auth_url = '{0}://{1}/identity/v3'.format(ssl,keystone_ip)
+    auth_url = '{0}://{1}:5000/v3'.format(ssl, keystone_ip)
     auth = v3.Password(auth_url=auth_url, user_domain_name='default',
                        username=username, password=password,
                        project_domain_name='default',
                        project_name=project_name)
 
-    sess = session.Session(auth=auth)
+    sess = session.Session(auth=auth, verify=False)
     token = sess.get_token()
     return token
 
 
 def get_token_v2(keystone_ip, username, password, tenant_name):
-    auth_url = 'http://{}:5000/v2.0'.format(keystone_ip)
+    auth_url = '{0}://{1}:5000/v2.0'.format(ssl,keystone_ip)
     auth = v2.Password(auth_url=auth_url, username=username,
                        password=password, tenant_name=tenant_name)
-    sess = session.Session(auth=auth)
+    sess = session.Session(auth=auth, verify=False)
     token = sess.get_token()
     return token
 
