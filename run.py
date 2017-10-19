@@ -5,7 +5,7 @@ from datetime import datetime
 
 from ops_report import common
 from ops_report import config
-from ops_report import email
+from ops_report import send_email
 from ops_report import generate_excel
 from ops_report import nova_request
 from ops_report import zabbix_request
@@ -70,7 +70,7 @@ def main():
     generate_excel.write_xls(file_name=path_name_file, data=nova_hyper_list)
 
     # Step 5: After having this file, then it needs to send the file to Admin.
-    email.send_mail(send_from=email_from, password=pass_email_from,
+    send_email.send_mail(send_from=email_from, password=pass_email_from,
                     send_to=email_to, path_file=path_name_file,
                     server=email_server)
 
