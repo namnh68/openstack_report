@@ -15,6 +15,8 @@ class CephClient(object):
         full_url = 'http://{0}:{1}/api/v0.1/df?detail'.format(self.ceph_ip, self.ceph_port)
         headers = {'Accept': 'application/json'}
         status = common.send_get_request(full_url, headers=headers)
+        result = status.result().json()
+        pools = result.get('output').get('pools')
 
         output = {}
         for pool in pools:

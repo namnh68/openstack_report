@@ -16,7 +16,7 @@ ssl = 'https'
 # For Zabbix
 user_zabbix = 'Admin'
 pass_zabbix = 'zabbix'
-zabbix_ip = '192.168.100.105'
+zabbix_ip = '172.16.69.45'
 zabbix_port = '80'
 
 # For Ceph
@@ -24,15 +24,15 @@ ceph_ip = '172.16.69.167'
 ceph_port = '5000'
 
 # For sending emails
-email_from = 'test@gmail.com'
-pass_email_from = '123456'
-email_to = 'test_to@gmail.com'
-email_server = 'smtp.gmail.com:587'
+email_from = 'mycloudvnn@vdc.com.vn'
+pass_email_from = 'Vdc1T@!ma1l'
+email_to = 'zabbix.vdcit@gmail.com'
+email_server = 'smtp1.vdc.com.vn:25'
 
 # Mapping Nova with Zabbix
 
 mapping = {
-    'compute1': 'compute1_zabbix',
-    'compute2': 'compute2_zabbix',
+    'compute1.hn.vnpt': 'com1_hn',
+    'compute2.hn.vnpt': 'com2_hn',
     'ceph_hdd': 'volumes-hdd',
 }

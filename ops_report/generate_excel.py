@@ -13,17 +13,18 @@ def prepare_header(sheet, workbook):
         'align': 'center',
         'valign': 'vcenter',
         'fg_color': 'yellow'})
-    sheet.merge_range('A4:A6', data=headers1[0], cell_format=header_format)
-    sheet.merge_range('B4:G4', data=headers1[1], cell_format=header_format)
-    sheet.merge_range('H4:K4', data=headers1[2], cell_format=header_format)
+    sheet.merge_range('A4:K4', data='OpenStack Status', cell_format=header_format)
+    sheet.merge_range('A6:A8', data=headers1[0], cell_format=header_format)
+    sheet.merge_range('B6:G6', data=headers1[1], cell_format=header_format)
+    sheet.merge_range('H6:K6', data=headers1[2], cell_format=header_format)
     col2 = 0
     for header2 in headers2:
-        row2 = 4
+        row2 = 6
         sheet.merge_range(row2, col2+1, row2, col2+3, header2,
                           cell_format=header_format)
         col2 = col2 + 3
-    sheet.write(4, 10, 'Real', header_format)
-    row3 = 5
+    sheet.write(6, 10, 'Real', header_format)
+    row3 = 7
     for col3, header3 in enumerate(headers3):
         col3 += 1
         sheet.write(row3, col3, header3, header_format)
@@ -39,7 +40,7 @@ def write_xls(file_name, data):
     sheet.set_column('B:M', 15, cell_format=format_col)
     sheet.set_default_row(20, format_col)
     sheet = prepare_header(sheet, book)
-    row = 6
+    row = 8
     for name_com, params in data.items():
         sheet.write(row, 0, name_com)
         sheet.write_number(row, 1, params.get('memory_mb_used'))
