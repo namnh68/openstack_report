@@ -34,6 +34,7 @@ class CinderClient(object):
         :return: Output is Total capacity and used capacity in GB
         """
         list_pools = self.pools_stats().get('pools')
+       # print(list_pools)
         output = {}
         for pool in list_pools:
             key_name_pool = pool.get('capabilities').get('volume_backend_name')

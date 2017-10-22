@@ -43,7 +43,7 @@ def main():
     # Step 1: Get token version 3
     token = common.get_token_v3(keystone_ip=keystone_ip, username=user_admin, password=pass_admin, project_name=project_name)
 
-    # Step 2: Get Hypervisors information from Nova
+    # Step 2: Get Cinder pool information from Cinder
     cinder_client = cinder_request.CinderClient(token=token, cinder_ip=cinder_ip,
                                           port=cinder_port, project_id=project_id)
     cinder_pools_list = cinder_client.pools_stats_detail()
@@ -55,13 +55,15 @@ def main():
     # Step 3: Get information from Ceph
     for pool_ceph, params in ceph_pool_list.items():
         try:
-            pool_ops = config.mapping.keys()[config.mapping.values().index(pool_ceph)]
-       # if pool_ops is not None:
+            pool_ops = list(config.mapping.keys())[list(config.mapping.values()).index(pool_ceph)]
+        #    pool_ops = config.mapping[pool_ceph]
+         #   print(pool_ops)
             theory_params = cinder_pools_list[pool_ops]
             ceph_pool_list[pool_ceph].update(theory_params)
-       # else:
+
         except Exception as e:
             theory_params = {'total_mb':0, 'used_mb':0}
+         #   print(pool_ceph)
             ceph_pool_list[pool_ceph].update(theory_params)
 
     # Step 4: From cinder_pools_list, writing to excel file
