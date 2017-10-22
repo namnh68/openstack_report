@@ -6,7 +6,7 @@ import xlsxwriter
 def prepare_header(sheet, workbook):
     headers1 = ['Pool', 'Storage']
     headers2 = ['Theory', 'Real']
-    headers3 = ['Used', 'Total', 'Ratio']*2
+    headers3 = ['Used (GB)', 'Total (GB)', 'Ratio (%)']*2
     header_format = workbook.add_format({
         'bold': 1,
         'border': 1,
@@ -31,7 +31,7 @@ def prepare_header(sheet, workbook):
 
 def write_xls(file_name, data):
     book = xlsxwriter.Workbook(file_name)
-    format_col = book.add_format({'align': 'center'})
+    format_col = book.add_format({'align': 'center', 'num_format': '0.0000'})
     sheet = book.add_worksheet('Storage_Usage')
     sheet.set_column('A:A', 20, cell_format=format_col)
     sheet.set_column('B:M', 15, cell_format=format_col)
@@ -40,15 +40,15 @@ def write_xls(file_name, data):
     row = 8
     for name_com, params in data.items():
         sheet.write(row, 0, name_com)
-        sheet.write_number(row, 1, params.get('used_mb'))
-        sheet.write_number(row, 2, params.get('total_mb'))
-        if params.get('total_mb') != 0:
+        sheet.write_number(row, 1, params.get('used_gb'))
+        sheet.write_number(row, 2, params.get('total_gb'))
+        if params.get('total_gb') != 0:
             sheet.write_formula(row, 3, '=(B{0}/C{0})*100'.format(row+1))
         else:
             sheet.write_formula(row, 3, '0')
-        sheet.write_number(row, 4, params.get('real_used_mb'))
-        sheet.write_number(row, 5, params.get('real_total_mb'))
-        if params.get('real_total_mb') != 0:
+        sheet.write_number(row, 4, params.get('real_used_gb'))
+        sheet.write_number(row, 5, params.get('real_total_gb'))
+        if params.get('real_total_gb') != 0:
             sheet.write_formula(row, 6, '=(E{0}/F{0})*100'.format(row+1))
         else:
             sheet.write_formula(row, 6, '0')

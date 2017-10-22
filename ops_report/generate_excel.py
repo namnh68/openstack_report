@@ -6,7 +6,7 @@ import xlsxwriter
 def prepare_header(sheet, workbook):
     headers1 = ['Host', 'Ram', 'CPU']
     headers2 = ['Theory', 'Real', 'Theory']
-    headers3 = ['Used', 'Total', 'Ratio']*3
+    headers3 = ['Used (MB)', 'Total (MB)', 'Ratio (%)', 'Used (MB)', 'Total (MB)', 'Ratio (%)', 'Use (cores)', 'Total (cores)', 'Ratio (%)']
     header_format = workbook.add_format({
         'bold': 1,
         'border': 1,
@@ -28,13 +28,13 @@ def prepare_header(sheet, workbook):
     for col3, header3 in enumerate(headers3):
         col3 += 1
         sheet.write(row3, col3, header3, header_format)
-    sheet.write(row3, 10, 'Percent CPU', header_format)
+    sheet.write(row3, 10, 'Percent CPU (%)', header_format)
     return sheet
 
 
 def write_xls(file_name, data):
     book = xlsxwriter.Workbook(file_name)
-    format_col = book.add_format({'align': 'center'})
+    format_col = book.add_format({'align': 'center', 'num_format': '0.0000'})
     sheet = book.add_worksheet('OpenStack_hypervisor')
     sheet.set_column('A:A', 20, cell_format=format_col)
     sheet.set_column('B:M', 15, cell_format=format_col)

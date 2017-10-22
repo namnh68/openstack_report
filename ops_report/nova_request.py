@@ -6,19 +6,20 @@ from ops_report import common
 
 class NovaClient(object):
 
-    def __init__(self, token, nova_ip=None, port=None, project_id=None):
+    def __init__(self, token, nova_ip=None, port=None, project_id=None, ssl=None):
         self.nova_ip = nova_ip
         self.port = port if port.upper() != 'NONE' else None
         self.token = token
         self.project_id = project_id
+        self.ssl = ssl
 
     def hyper_list(self):
         if self.port is None:
             full_url_nova = '{0}://{1}/compute/v2.1/' \
-                            '{2}/os-hypervisors/detail'.format(common.ssl,self.nova_ip,self.project_id)
+                            '{2}/os-hypervisors/detail'.format(self.ssl,self.nova_ip,self.project_id)
         else:
             full_url_nova = '{0}://{1}:{2}/v2.1/' \
-                            '{3}/os-hypervisors/detail'.format(common.ssl,self.nova_ip,
+                            '{3}/os-hypervisors/detail'.format(self.ssl,self.nova_ip,
                                                            self.port,self.project_id)
         headers = {
             'X-Auth-Token': self.token,
@@ -36,10 +37,10 @@ class NovaClient(object):
         """
         if self.port is None:
             url_nova = '{0}://{1}/compute/v2.1/{2}/os-hypervisors/{2}'. \
-                format(common.ssl, self.nova_ip, id_compute,self.project_id)
+                format(self.ssl, self.nova_ip, id_compute,self.project_id)
         else:
             url_nova = '{0}://{1}:{2}/v2.1/{3}/os-hypervisors/{4}'.\
-                format(common.ssl, self.nova_ip, self.port, self.project_id, id_compute)
+                format(self.ssl, self.nova_ip, self.port, self.project_id, id_compute)
         headers = {
             'X-Auth-Token': self.token,
             'Content-Type': 'application/json'

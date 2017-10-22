@@ -27,7 +27,7 @@ def send_mail(send_from=None, password=None, send_to=None,
     hostname, port = server.split(':')
     msg = multipart.MIMEMultipart()
     msg['From'] = send_from
-    msg['To'] = send_to
+    msg['To'] = ', '.join(send_to)
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = subject
 

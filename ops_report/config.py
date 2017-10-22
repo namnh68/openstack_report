@@ -1,8 +1,6 @@
 # For OpenStack
 user_admin = 'admin'
-pass_admin = 'xxxxxx'
-#pass_admin = 'Welcome123'
-keystone_ip = '172.16.69.50'
+pass_admin = 'xxxxxx'keystone_ip = '172.16.69.50'
 nova_ip = '172.16.69.50'
 nova_port = '8774'
 ratio_ram = '1.5'
@@ -26,7 +24,7 @@ ceph_port = '5000'
 # For sending emails
 email_from = 'abc@email.com'
 pass_email_from = 'xxx'
-email_to = 'xxxx@gmail.com'
+email_to = 'xxxx@gmail.com; yyy@email.com'
 email_server = 'xxxxx:port'
 
 # Mapping Nova with Zabbix

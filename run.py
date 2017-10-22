@@ -42,6 +42,7 @@ def main():
     project_id = config.project_id
     ratio_ram = config.ratio_ram
     ratio_cpu = config.ratio_cpu
+    ssl = config.ssl
 
     # For Zabbix
     user_zabbix = config.user_zabbix
@@ -56,22 +57,22 @@ def main():
     # For sending emails
     email_from = config.email_from
     pass_email_from = config.pass_email_from
-    email_to = config.email_to
+    email_to = config.email_to.split(";")
     email_server = config.email_server
 
     # Step 1: Get token version 3
     token = common.get_token_v3(keystone_ip=keystone_ip, username=user_admin,
-                                password=pass_admin, project_name=project_name)
+                                password=pass_admin, project_name=project_name, ssl=ssl)
 
     # Step 2: Get Hypervisors information from Nova
     nova_client = nova_request.NovaClient(token=token, nova_ip=nova_ip,
-                                          port=nova_port,project_id=project_id)
+                                          port=nova_port,project_id=project_id, ssl=ssl)
     nova_hyper_list = nova_client.hyper_list_customize(ratio_ram=ratio_ram,
                                                        ratio_cpu=ratio_cpu)
 
     # Step 3: Get Cinder pool information from Cinder
     cinder_client = cinder_request.CinderClient(token=token, cinder_ip=cinder_ip,
-                                                port=cinder_port, project_id=project_id)
+                                                port=cinder_port, project_id=project_id, ssl=ssl)
     cinder_pools_list = cinder_client.pools_stats_detail()
 
     # Step 4: Get information from Ceph
@@ -102,7 +103,7 @@ def main():
             theory_params = cinder_pools_list[pool_ops]
             ceph_pool_list[pool_ceph].update(theory_params)
         except Exception as e:
-            theory_params = {'total_mb': 0, 'used_mb': 0}
+            theory_params = {'total_gb': 0, 'used_gb': 0}
             ceph_pool_list[pool_ceph].update(theory_params)
 
     # Step 8: From nova_hyper_list, writing to excel file

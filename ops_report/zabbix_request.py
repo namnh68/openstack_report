@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from zabbix.api import ZabbixAPI
+from ops_report import common
 
 
 def get_zabbix(username, password, ip_zabbix, port):
@@ -36,9 +37,9 @@ class ZabbixClient(object):
         results = hosts.get('result')
         for result in results:
             if result.get('key_') == "vm.memory.size[available]":
-                output['real_memory_used'] = int(result.get('lastvalue'))
+                output['real_memory_used'] = common.byte_to_mb(int(result.get('lastvalue')))
             elif result.get('key_') == "vm.memory.size[total]":
-                output['real_memory_mb'] = int(result.get('lastvalue'))
+                output['real_memory_mb'] = common.byte_to_mb(int(result.get('lastvalue')))
             elif result.get('key_') == "system.cpu.util[,system]":
                 output['percent_cpu'] = float(result.get('lastvalue'))
             else:

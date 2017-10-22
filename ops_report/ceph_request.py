@@ -22,10 +22,8 @@ class CephClient(object):
         for pool in pools:
             keyname_pool = pool.get('name')
             output[keyname_pool] = {}
-            mbytes_used = common.byte_to_mb(pool.get('stats').get('bytes_used'))
-            mbytes_avail = common.byte_to_mb(pool.get('stats').get('max_avail'))
-      #      output[keyname_pool].update({'real_used_mb': pool.get('stats').get('bytes_used')})
-            output[keyname_pool].update({'real_used_mb': mbytes_used})
-        #    output[keyname_pool].update({'real_total_mb': pool.get('stats').get('max_avail')})
-            output[keyname_pool].update({'real_total_mb': mbytes_avail})
+            mbytes_used = common.byte_to_gb(pool.get('stats').get('bytes_used'))
+            mbytes_avail = common.byte_to_gb(pool.get('stats').get('max_avail'))
+            output[keyname_pool].update({'real_used_gb': mbytes_used})
+            output[keyname_pool].update({'real_total_gb': mbytes_avail})
         return output
