@@ -4,38 +4,35 @@ import xlsxwriter
 
 
 def prepare_header(sheet, workbook):
-    headers1 = ['Host', 'Ram', 'CPU']
-    headers2 = ['Theory', 'Real', 'Theory']
-    headers3 = ['Used (MB)', 'Total (MB)', 'Ratio (%)', 'Used (MB)', 'Total (MB)', 'Ratio (%)', 'Use (cores)', 'Total (cores)', 'Ratio (%)']
+    headers1 = ['Pool', 'Storage']
+    headers2 = ['Theory', 'Real']
+    headers3 = ['Used (GB)', 'Total (GB)', 'Ratio (%)']*2
     header_format = workbook.add_format({
         'bold': 1,
         'border': 1,
         'align': 'center',
         'valign': 'vcenter',
         'fg_color': 'yellow'})
-    sheet.merge_range('A4:K4', data='OpenStack Status', cell_format=header_format)
+    sheet.merge_range('A4:G4', data='Ceph Status', cell_format=header_format)
     sheet.merge_range('A6:A8', data=headers1[0], cell_format=header_format)
     sheet.merge_range('B6:G6', data=headers1[1], cell_format=header_format)
-    sheet.merge_range('H6:K6', data=headers1[2], cell_format=header_format)
     col2 = 0
     for header2 in headers2:
         row2 = 6
         sheet.merge_range(row2, col2+1, row2, col2+3, header2,
                           cell_format=header_format)
         col2 = col2 + 3
-    sheet.write(6, 10, 'Real', header_format)
     row3 = 7
     for col3, header3 in enumerate(headers3):
         col3 += 1
         sheet.write(row3, col3, header3, header_format)
-    sheet.write(row3, 10, 'Percent CPU (%)', header_format)
     return sheet
 
 
 def write_xls(file_name, data):
     book = xlsxwriter.Workbook(file_name)
     format_col = book.add_format({'align': 'center', 'num_format': '0.0000'})
-    sheet = book.add_worksheet('OpenStack_hypervisor')
+    sheet = book.add_worksheet('Storage_Usage')
     sheet.set_column('A:A', 20, cell_format=format_col)
     sheet.set_column('B:M', 15, cell_format=format_col)
     sheet.set_default_row(20, format_col)
@@ -43,24 +40,17 @@ def write_xls(file_name, data):
     row = 8
     for name_com, params in data.items():
         sheet.write(row, 0, name_com)
-        sheet.write_number(row, 1, params.get('memory_mb_used'))
-        sheet.write_number(row, 2, params.get('memory_mb'))
-        if params.get('memory_mb') != 0:
+        sheet.write_number(row, 1, params.get('used_gb'))
+        sheet.write_number(row, 2, params.get('total_gb'))
+        if params.get('total_gb') != 0:
             sheet.write_formula(row, 3, '=(B{0}/C{0})*100'.format(row+1))
         else:
             sheet.write_formula(row, 3, '0')
-        sheet.write_number(row, 4, params.get('real_memory_used'))
-        sheet.write_number(row, 5, params.get('real_memory_mb'))
-        if params.get('real_memory_mb') != 0:
+        sheet.write_number(row, 4, params.get('real_used_gb'))
+        sheet.write_number(row, 5, params.get('real_total_gb'))
+        if params.get('real_total_gb') != 0:
             sheet.write_formula(row, 6, '=(E{0}/F{0})*100'.format(row+1))
         else:
             sheet.write_formula(row, 6, '0')
-        sheet.write_number(row, 7, params.get('vcpus_used'))
-        sheet.write_number(row, 8, params.get('vcpus'))
-        if params.get('vcpus') != 0:
-            sheet.write_formula(row, 9, '=(H{0}/I{0})*100'.format(row+1))
-        else:
-            sheet.write_formula(row, 9, '0')
-        sheet.write_number(row, 10, params.get('percent_cpu'))
         row += 1
     book.close()
